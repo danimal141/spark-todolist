@@ -10,12 +10,11 @@ import spark.Spark.get
 
 fun main(args: Array<String>) {
     val objectMapper = ObjectMapper().registerKotlinModule()
-    get("/tasks") { _, _ ->
+    get("/tasks", { _, _ ->
         // TODO: replace
-        val tasks = listOf(
+        listOf(
             Task(1, "Test1", false),
             Task(2, "Test2", true)
         )
-        objectMapper.writeValueAsString(tasks)
-    }
+    }, objectMapper::writeValueAsString)
 }
