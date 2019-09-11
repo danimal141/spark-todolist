@@ -19,5 +19,6 @@ fun main(args: Array<String>) {
         get("/:id", taskController.show(), jsonTransformer)
         post("", taskController.create(), jsonTransformer)
         delete("/:id", taskController.destroy(), jsonTransformer)
+        patch("/:id", taskController.update(), jsonTransformer)
     }
 }
