@@ -14,8 +14,10 @@ fun main(args: Array<String>) {
     val taskRepository = TaskRepository()
     val taskController = TaskController(objectMapper, taskRepository)
 
-    get("/tasks", taskController.index(), jsonTransformer)
-    get("/tasks/:id", taskController.show(), jsonTransformer)
-    post("/tasks", taskController.create(), jsonTransformer)
-    delete("/tasks/:id", taskController.destroy(), jsonTransformer)
+    path("/tasks") {
+        get("", taskController.index(), jsonTransformer)
+        get("/:id", taskController.show(), jsonTransformer)
+        post("", taskController.create(), jsonTransformer)
+        delete("/:id", taskController.destroy(), jsonTransformer)
+    }
 }
