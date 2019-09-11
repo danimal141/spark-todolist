@@ -1,6 +1,7 @@
 package todolist
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import spark.Request
 import spark.Route
 import spark.Spark.halt
 
@@ -8,13 +9,24 @@ import spark.Spark.halt
  * Created by hideaki on 2019/09/10.
  */
 class TaskController(private val objectMapper: ObjectMapper, private val taskRepository: TaskRepository) {
+    private val Request.task: Task?
+        get() {
+            val id = params("id").toLongOrNull()
+            return id?.let(taskRepository::findById)
+        }
+
     fun index(): Route = Route { req, res ->
         taskRepository.findAll()
     }
 
     fun show(): Route = Route { req, res ->
-        val id = req.params("id").toLongOrNull()
-        id?.let(taskRepository::findById) ?: throw halt(400)
+        req.task ?: throw halt(404)
+    }
+
+    fun destroy(): Route = Route { req, res ->
+        val task = req.task ?: throw halt(404)
+        taskRepository.delete(task)
+        res.status(204)
     }
 
     fun create(): Route = Route { req, res ->
