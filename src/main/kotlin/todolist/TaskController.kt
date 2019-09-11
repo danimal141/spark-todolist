@@ -12,6 +12,11 @@ class TaskController(private val objectMapper: ObjectMapper, private val taskRep
         taskRepository.findAll()
     }
 
+    fun show(): Route = Route { req, res ->
+        val id = req.params("id").toLongOrNull()
+        id?.let(taskRepository::findById) ?: throw halt(400)
+    }
+
     fun create(): Route = Route { req, res ->
         val request: TaskCreateRequest =
             objectMapper.readValue(req.bodyAsBytes()) ?: throw halt(400)
